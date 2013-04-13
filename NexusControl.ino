@@ -5,25 +5,24 @@
                Intend to control Nexus power on/off, volume up, volume down, and mute.
     URL:       http://berkman.co/nexus
     
-    Some code borrowed from http://atomic-cactus.com/2013/03/29/resistor-ladder-steering-wheel-control-interpreter-using-arduino/
+    Some code borrowed from Yuri (thanks!): 
+    http://atomic-cactus.com/2013/03/29/resistor-ladder-steering-wheel-control-interpreter-using-arduino/
 */
 
 int sensorPin = A0;
-int ledPin = 13;
 float sensorValue = 0.00;
 
-// Voltage readings from SWC
-float BUTTON_OFF =            0.57;      // Volts.  114
-float BUTTON_VOLUME_UP =      3.03;      // Volts.  611
-float BUTTON_VOLUME_DOWN =    2.77;      // Volts.  557
-float BUTTON_MUTE =           3.23;      // Volts.  651
-float BUTTON_MODE =           2.47;      // Volts.  497
-float BUTTON_CHANNEL_UP =     2.06;      // Volts.  413
-float BUTTON_CHANNEL_DOWN =   1.53;      // Volts.  307
+// Voltage readings from SWC (in volts)
+float BUTTON_OFF =            0.57;
+float BUTTON_VOLUME_UP =      3.03;
+float BUTTON_VOLUME_DOWN =    2.77;
+float BUTTON_MUTE =           3.23;
+float BUTTON_MODE =           2.47;
+float BUTTON_CHANNEL_UP =     2.06;
+float BUTTON_CHANNEL_DOWN =   1.53;
 
 
 void setup() {
-  pinMode (ledPin, OUTPUT);
   Serial.begin(9600);
 }
 
@@ -31,7 +30,8 @@ void setup() {
 void loop() {
   sensorValue = analogRead(sensorPin); 
   
-  //float value = sensorValue *  (5.0 / 1023.0);
+  // Input is on a scale of 0-1023.  Max voltage is 5.0V  Convert to the actual voltage
+  float voltageValue = sensorValue *  (5.0 / 1023.0);
   
-  Serial.println(sensorValue);
+  Serial.println(voltageValue);
 }
