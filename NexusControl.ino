@@ -17,20 +17,20 @@
 */
 
 #define	KEY_MUTE	      0x7F    // Keyboard Mute
-#define	KEY_VOLUMEUP	      0x80    // Keyboard Volume Up
-#define	KEY_VOLUMEDOWN	      0x81    // Keyboard Volume Down
-#define	KEY_PREVIOUSSONG      0xEA    // Keyboard Previous Song
-#define	KEY_NEXTSONG	      0xEB    // Keyboard Next Song
+#define	KEY_VOLUME_UP	      0x80    // Keyboard Volume Up
+#define	KEY_VOLUME_DOWN	      0x81    // Keyboard Volume Down
+#define	KEY_PREVIOUS_SONG     0xEA    // Keyboard Previous Song
+#define	KEY_NEXT_SONG	      0xEB    // Keyboard Next Song
 
-int sensorPin =               A0;     // Voltage reading from SWC
+int sensorPin =               A0;     // Input from SWC
 int powerPin =                A3;     // Output for controlling on/off
 
 float sensorValue =           0.00;
-int delay_sec =               5;      // Delay between button presses
+int delay_sec =               0.5;      // Delay between button presses
 float range =                 0.10;   // Voltage range for button presses
 
 // Voltage readings from SWC (in volts)
-float BUTTON_OFF =            0.57; // .47 - .67
+float BUTTON_OFF =            0.57; // 0.47 - 0.67
 float BUTTON_CHANNEL_DOWN =   1.53; // 1.43 - 1.63
 float BUTTON_CHANNEL_UP =     2.06; // 1.96 - 2.16
 float BUTTON_MODE =           2.47; // 2.37 - 2.57
@@ -39,9 +39,11 @@ float BUTTON_VOLUME_UP =      3.03; // 2.93 - 3.13
 float BUTTON_MUTE =           3.23; // 3.13 - 3.33
 
 void sendKey(byte key, byte modifiers = 0);
+void checkValue(float value);
 
 
 void setup() {
+  pinMode(powerPin, OUTPUT);
   Serial.begin(9600);
 }
 
@@ -51,13 +53,43 @@ void loop() {
   
   // Input is on a scale of 0-1023.  Max voltage is 5.0V  Convert to the actual voltage
   float voltageValue = sensorValue *  (5.0 / 1023.0);
-  
   Serial.println(voltageValue);
   
-  sendKey(KEY_VOLUMEUP);
-  delay(delay_sec * 1000);
+  checkValue(voltageValue);
 }
 
+
+
+void checkValue(float value) {
+  if (value >= (BUTTON_CHANNEL_DOWN - range) && value <= (BUTTON_CHANNEL_DOWN + range)) {
+      sendKey(KEY_PREVIOUS_SONG);
+      Serial.println("Previous Song");
+      delay(delay_sec * 1000);
+  } else if (value >= (BUTTON_CHANNEL_UP - range) && value <= (BUTTON_CHANNEL_UP + range)) {
+      sendKey(KEY_NEXT_SONG);
+      Serial.println("Next Song");
+      delay(delay_sec * 1000);
+  } else if (value >= (BUTTON_MODE - range) && value <= (BUTTON_MODE + range)) {
+      // Power Nexus On/Off
+      digitalWrite(powerPin, HIGH);
+      Serial.println("On/Off");
+      delay(delay_sec * 1000);
+  } else if (value >= (BUTTON_VOLUME_DOWN - range) && value <= (BUTTON_VOLUME_DOWN + range)) {
+      sendKey(KEY_VOLUME_DOWN);
+      Serial.println("Volume Down");
+      delay(delay_sec * 1000);
+  } else if (value >= (BUTTON_VOLUME_UP - range) && value <= (BUTTON_VOLUME_UP + range)) {
+      sendKey(KEY_VOLUME_UP);
+      Serial.println("Volume Up");
+      delay(delay_sec * 1000);
+  } else if (value >= (BUTTON_MUTE - range) && value <= (BUTTON_MUTE + range)) {
+      sendKey(KEY_MUTE);
+      Serial.println("Mute");
+      delay(delay_sec * 1000);
+  } else {
+    digitalWrite(powerPin, LOW);
+  }
+}
 
 
 void sendKey(byte key, byte modifiers) {
