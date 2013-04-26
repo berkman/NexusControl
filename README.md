@@ -8,7 +8,8 @@ Name:      Mike Berkman (mike@berkman.co)
 Date:      2013-04-25
 Purpose:   Receive input from Subaru steering wheel controlsv(SWC) and translate the signal to control a Nexus 7 tablet.
            Intend to control Nexus power on/off (mode), volume up, volume down, previous track, next track and mute.
-Device:    Sparkfun Pro Micro -- https://www.sparkfun.com/products/11098
+Device:    Sparkfun Pro Micro
+	   https://www.sparkfun.com/products/11098
 URL:       http://berkman.co/nexus
     
 Some code/guidance borrowed from Yuri (thanks!): 
