@@ -5,7 +5,7 @@ Control a Nexus 7 with the steering wheel controls (SWC) from a 2008 Subaru STi.
 
 ------------
 
-**Name:**      Mike Berkman (mike@berkman.co)
+**Author:**      Mike Berkman (mike@berkman.co)
 
 **URL:**       http://berkman.co/nexus
 
